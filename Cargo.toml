@@ -1,0 +1,14 @@
+[package]
+name = "egui_sdl2_platform"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "A render-backend independant egui backend for sdl2"
+
+[workspace]
+members = ["examples/*"]
+
+[dependencies]
+sdl2 = { version = "0.35", features = ["raw-window-handle", "static-link", "bundled"] }
+egui = "0.18"
+anyhow = "1.0"

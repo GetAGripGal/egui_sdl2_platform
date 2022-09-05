@@ -1,0 +1,15 @@
+[package]
+name = "wgpu_plus_sdl2"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Include egui_sdl2_platform
+egui_sdl2_platform = { path = "../../" }
+
+sdl2 = { version = "0.35", features = ["raw-window-handle", "static-link", "bundled"] }
+wgpu = "0.13"
+egui = "0.18"
+egui_wgpu_backend = "0.18"
+pollster = "0.2"
+anyhow = "1.0"
