@@ -1,5 +1,5 @@
-[![Crates.io](https://img.shields.io/crates/v/sdl2_egui_platform.svg)](https://crates.io/crates/sdl2_egui_platform)
-[![Documentation](https://docs.rs/sdl2_egui_platform/badge.svg)](https://docs.rs/sdl2_egui_platform)
+[![Crates.io](https://img.shields.io/crates/v/egui_sdl2_platform.svg)](https://crates.io/crates/sdl2_egui_platform)
+[![Documentation](https://docs.rs/egui_sdl2_platform/badge.svg)](https://docs.rs/sdl2_egui_platform)
 
 # A Sdl2 + Egui Backend
 An egui backend for sdl2 unbound to any renderer-backend.
