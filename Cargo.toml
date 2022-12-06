@@ -9,6 +9,6 @@ description = "A render-backend independant egui backend for sdl2"
 members = ["examples/*"]
 
 [dependencies]
-sdl2 = { version = "0.35", features = ["raw-window-handle", "static-link", "bundled"] }
+sdl2 = { version = "0.35", features = ["raw-window-handle"] }
 egui = "0.18"
 anyhow = "1.0"
