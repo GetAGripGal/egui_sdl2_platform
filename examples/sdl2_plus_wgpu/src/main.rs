@@ -37,7 +37,7 @@ async fn run() -> anyhow::Result<()> {
     let (device, queue) = adapter
         .request_device(
             &wgpu::DeviceDescriptor {
-                features: wgpu::Features::TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES,
+                features: wgpu::Features::default(),
                 limits: if cfg!(target_arch = "wasm32") {
                     wgpu::Limits::downlevel_webgl2_defaults()
                 } else {
@@ -57,7 +57,7 @@ async fn run() -> anyhow::Result<()> {
         format: surface_format,
         width: window.size().0,
         height: window.size().1,
-        present_mode: wgpu::PresentMode::Fifo,
+        present_mode: wgpu::PresentMode::Mailbox,
     };
     surface.configure(&device, &surface_config);
 
@@ -82,7 +82,7 @@ async fn run() -> anyhow::Result<()> {
         // Get the egui context and begin drawing the frame
         let ctx = platform.context();
         // Draw an egui window
-        egui::Window::new("Hello, world!").show(ctx, |ui| {
+        egui::Window::new("Hello, world!").show(&ctx, |ui| {
             ui.label("Hello, world!");
             if ui.button("Greet").clicked() {
                 println!("Hello, world!");
@@ -109,6 +109,27 @@ async fn run() -> anyhow::Result<()> {
             label: Some("Main Command Encoder"),
         });
 
+        // Clear the screen
+        {
+            encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color {
+                            r: color[0] as f64,
+                            g: color[1] as f64,
+                            b: color[2] as f64,
+                            a: color[3] as f64,
+                        }),
+                        store: true,
+                    },
+                })],
+                depth_stencil_attachment: None,
+                label: None,
+            });
+        }
+
         // Upload all the resources to the egui render pass
         let screen_descriptor = egui_wgpu_backend::ScreenDescriptor {
             physical_width: surface_config.width,
@@ -122,18 +143,7 @@ async fn run() -> anyhow::Result<()> {
         egui_pass.update_buffers(&device, &queue, &paint_jobs, &screen_descriptor);
 
         // Execute the egui render pass
-        egui_pass.execute(
-            &mut encoder,
-            &view,
-            &paint_jobs,
-            &screen_descriptor,
-            Some(wgpu::Color {
-                r: color[0] as f64,
-                g: color[1] as f64,
-                b: color[2] as f64,
-                a: color[3] as f64,
-            }),
-        )?;
+        egui_pass.execute(&mut encoder, &view, &paint_jobs, &screen_descriptor, None)?;
 
         // Submit the command encoder
         queue.submit([encoder.finish()]);
@@ -145,8 +155,6 @@ async fn run() -> anyhow::Result<()> {
 
         // Handle sdl events
         for event in event_pump.poll_iter() {
-            // Let the egui platform handle the event
-            platform.handle_event(&event, &sdl, &video);
             // Handle sdl events
             match event {
                 Event::Window {
@@ -155,7 +163,7 @@ async fn run() -> anyhow::Result<()> {
                     ..
                 } if window_id == window.id() => match win_event {
                     WindowEvent::Close => break 'main,
-                    WindowEvent::Resized(w, h) | WindowEvent::SizeChanged(w, h) => {
+                    WindowEvent::SizeChanged(w, h) => {
                         if w > 0 && h > 0 {
                             surface_config.width = w as u32;
                             surface_config.height = h as u32;
@@ -166,6 +174,8 @@ async fn run() -> anyhow::Result<()> {
                 },
                 _ => {}
             }
+            // Let the egui platform handle the event
+            platform.handle_event(&event, &sdl, &video);
         }
     }
 

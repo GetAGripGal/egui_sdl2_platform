@@ -234,11 +234,11 @@ impl Platform {
     }
 
     /// Return the processed context
-    pub fn context(&mut self) -> &egui::Context {
+    pub fn context(&mut self) -> egui::Context {
         // Begin the frame
         self.egui_ctx.begin_frame(self.raw_input.take());
         // Return the ctx
-        &self.egui_ctx
+        self.egui_ctx.clone()
     }
 
     /// Stop drawing the egui frame and return the full output
