@@ -7,7 +7,7 @@ An egui backend for sdl2 unbound to any renderer-backend.
 You can include it like so:
 ```toml
 [dependencies]
-egui_sdl2_platform = "0.1.0"
+egui_sdl2_platform = "0.2.0"
 sdl2 = "0.35"
 ```
 
