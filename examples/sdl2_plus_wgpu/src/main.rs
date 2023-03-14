@@ -1,6 +1,7 @@
 //! A simple example of how to create an sdl window with wgpu context and drawing en egui window ontop of it
 use std::time::Instant;
 
+use egui_sdl2_platform::sdl2;
 use sdl2::event::{Event, WindowEvent};
 
 /// Runs the demo app
@@ -23,9 +24,9 @@ async fn run() -> anyhow::Result<()> {
         .map_err(|e| anyhow::anyhow!("Failed to get sdl event pump: {}", e))?;
 
     // Create the wgpu instance
-    let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
+    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::default());
     // Create the wgpu surface
-    let surface = unsafe { instance.create_surface(&window) };
+    let surface = unsafe { instance.create_surface(&window)? };
 
     // Request the adapter
     let adapter = instance
@@ -50,14 +51,16 @@ async fn run() -> anyhow::Result<()> {
         .await?;
 
     // Get surface format
-    let surface_format = surface.get_supported_formats(&adapter)[0];
+    let surface_format = surface.get_capabilities(&adapter).formats[0];
     // Configure the surface
     let mut surface_config = wgpu::SurfaceConfiguration {
         usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_DST,
         format: surface_format,
+        view_formats: vec![wgpu::TextureFormat::Bgra8UnormSrgb],
+        alpha_mode: wgpu::CompositeAlphaMode::Opaque,
         width: window.size().0,
         height: window.size().1,
-        present_mode: wgpu::PresentMode::Mailbox,
+        present_mode: wgpu::PresentMode::AutoVsync,
     };
     surface.configure(&device, &surface_config);
 

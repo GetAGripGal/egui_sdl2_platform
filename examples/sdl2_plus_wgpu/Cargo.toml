@@ -7,9 +7,8 @@ edition = "2021"
 # Include egui_sdl2_platform
 egui_sdl2_platform = { path = "../../" }
 
-sdl2 = { version = "0.35", features = ["raw-window-handle", "static-link", "bundled"] }
-wgpu = "0.13"
-egui = "0.18"
-egui_wgpu_backend = "0.18"
+wgpu = "0.15"
+egui = "0.21"
+egui_wgpu_backend = "0.22"
 pollster = "0.2"
 anyhow = "1.0"

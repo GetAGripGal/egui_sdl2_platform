@@ -173,6 +173,7 @@ impl Platform {
                         self.raw_input.events.push(egui::Event::Key {
                             key,
                             pressed: true,
+                            repeat: false,
                             modifiers: self.modifiers,
                         });
                     }
@@ -212,6 +213,7 @@ impl Platform {
                         self.raw_input.events.push(egui::Event::Key {
                             key,
                             pressed: false,
+                            repeat: false,
                             modifiers: self.modifiers,
                         });
                     }
