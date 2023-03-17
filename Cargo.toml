@@ -1,6 +1,6 @@
 [package]
 name = "egui_sdl2_platform"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 license = "MIT"
 description = "A render-backend independant egui backend for sdl2"

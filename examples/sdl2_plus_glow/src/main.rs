@@ -1,9 +1,11 @@
-//! A simple example of how to create an sdl window with wgpu context and drawing en egui window ontop of it
+//! A simple example of how to create an sdl window with glow
+mod timestep;
 use std::{sync::Arc, time::Instant};
 
 use egui_glow::glow::HasContext;
 use egui_sdl2_platform::sdl2;
 use sdl2::event::{Event, WindowEvent};
+use timestep::TimeStep;
 
 const SCREEN_WIDTH: u32 = 800;
 const SCREEN_HEIGHT: u32 = 480;
@@ -48,7 +50,7 @@ async fn run() -> anyhow::Result<()> {
 
     // Get the time before the loop started
     let start_time = Instant::now();
-
+    let mut timestep = TimeStep::new();
     // The main loop
     'main: loop {
         // Update the time
@@ -83,6 +85,7 @@ async fn run() -> anyhow::Result<()> {
         let size = window.size();
         painter.paint_and_update_textures([size.0, size.1], 1.0, pj, &full_output.textures_delta);
         window.gl_swap_window();
+        timestep.run_this(|_| {});
 
         // Handle sdl events
         for event in event_pump.poll_iter() {
@@ -107,6 +110,10 @@ async fn run() -> anyhow::Result<()> {
             }
             // Let the egui platform handle the event
             platform.handle_event(&event, &sdl, &video);
+        }
+        
+        if let Some(_fps) = timestep.frame_rate() {
+            println!("{:?}", _fps);
         }
     }
 
