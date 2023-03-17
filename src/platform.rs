@@ -173,6 +173,7 @@ impl Platform {
                         self.raw_input.events.push(egui::Event::Key {
                             key,
                             pressed: true,
+                            repeat: false,
                             modifiers: self.modifiers,
                         });
                     }
@@ -212,6 +213,7 @@ impl Platform {
                         self.raw_input.events.push(egui::Event::Key {
                             key,
                             pressed: false,
+                            repeat: false,
                             modifiers: self.modifiers,
                         });
                     }
@@ -276,10 +278,13 @@ impl Platform {
             egui::CursorIcon::Wait => SystemCursor::Wait,
             _ => SystemCursor::Arrow,
         };
-        self.cursor = Cursor::from_system(new_cursor)
-            .map_err(|e| anyhow::anyhow!("Failed to get cursor from systems cursor: {}", e))?;
-        self.system_cursor = new_cursor;
-        self.cursor.set();
+
+        if self.system_cursor != new_cursor {
+            self.system_cursor = new_cursor;
+            self.cursor = Cursor::from_system(new_cursor)
+                .map_err(|e| anyhow::anyhow!("Failed to get cursor from systems cursor: {}", e))?;
+            self.cursor.set();
+        }
 
         Ok(output)
     }

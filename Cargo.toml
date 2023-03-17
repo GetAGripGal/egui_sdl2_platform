@@ -1,6 +1,6 @@
 [package]
 name = "egui_sdl2_platform"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 license = "MIT"
 description = "A render-backend independant egui backend for sdl2"
@@ -9,6 +9,21 @@ description = "A render-backend independant egui backend for sdl2"
 members = ["examples/*"]
 
 [dependencies]
-sdl2 = { version = "0.35", features = ["raw-window-handle"] }
-egui = "0.18"
+# Temporary commit ref to get SDL2 with correct raw_window_handle for use with wgpu
+sdl2 = { git = "https://github.com/Rust-SDL2/rust-sdl2", revion = "31e830e", features = ["raw-window-handle"] }
+egui = "0.21"
 anyhow = "1.0"
+
+[features]
+sdl2_unsafe_textures = ["sdl2/unsafe_textures"]
+sdl2_gfx = ["sdl2/gfx"]
+sdl2_mixer = ["sdl2/mixer"]
+sdl2_image = ["sdl2/image"]
+sdl2_ttf = ["sdl2/ttf"]
+# SDL2 build features
+sdl2_use-bindgen = ["sdl2/use-bindgen"]
+sdl2_use-pkgconfig = ["sdl2/use-pkgconfig"]
+sdl2_use-vcpkg = ["sdl2/use-vcpkg"]
+sdl2_use-mac_framework = ["sdl2/use_mac_framework"]
+sdl2_bundled = ["sdl2/bundled"]
+sdl2_static-link = ["sdl2/static-link"]
