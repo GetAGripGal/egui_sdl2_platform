@@ -111,7 +111,7 @@ async fn run() -> anyhow::Result<()> {
             // Let the egui platform handle the event
             platform.handle_event(&event, &sdl, &video);
         }
-        
+
         if let Some(_fps) = timestep.frame_rate() {
             println!("{:?}", _fps);
         }

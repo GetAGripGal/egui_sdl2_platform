@@ -9,7 +9,7 @@ use crate::ToEguiKey;
 /// The sdl2 platform for egui
 pub struct Platform {
     // The cursors for the platform
-    cursor: Cursor,
+    cursor: Option<Cursor>,
     system_cursor: SystemCursor,
     // The position of the mouse pointer
     pointer_pos: Pos2,
@@ -27,7 +27,8 @@ impl Platform {
     pub fn new(screen_size: (u32, u32)) -> anyhow::Result<Self> {
         Ok(Self {
             cursor: Cursor::from_system(SystemCursor::Arrow)
-                .map_err(|e| anyhow::anyhow!("Failed to get cursor from systems cursor: {}", e))?,
+                .map_err(|e| log::warn!("Failed to get cursor from systems cursor: {}", e))
+                .ok(),
             system_cursor: SystemCursor::Arrow,
             pointer_pos: Pos2::ZERO,
             raw_input: egui::RawInput {
@@ -261,29 +262,32 @@ impl Platform {
                 .map_err(|e| anyhow::anyhow!("Failed to assign text to clipboard: {}", e))?;
         }
 
-        // Update the cursor icon
-        let new_cursor = match output.platform_output.cursor_icon {
-            egui::CursorIcon::Crosshair => SystemCursor::Crosshair,
-            egui::CursorIcon::Default => SystemCursor::Arrow,
-            egui::CursorIcon::Grab => SystemCursor::Hand,
-            egui::CursorIcon::Grabbing => SystemCursor::SizeAll,
-            egui::CursorIcon::Move => SystemCursor::SizeAll,
-            egui::CursorIcon::PointingHand => SystemCursor::Hand,
-            egui::CursorIcon::ResizeHorizontal => SystemCursor::SizeWE,
-            egui::CursorIcon::ResizeNeSw => SystemCursor::SizeNESW,
-            egui::CursorIcon::ResizeNwSe => SystemCursor::SizeNWSE,
-            egui::CursorIcon::ResizeVertical => SystemCursor::SizeNS,
-            egui::CursorIcon::Text => SystemCursor::IBeam,
-            egui::CursorIcon::NotAllowed | egui::CursorIcon::NoDrop => SystemCursor::No,
-            egui::CursorIcon::Wait => SystemCursor::Wait,
-            _ => SystemCursor::Arrow,
-        };
+        if let Some(cursor) = &mut self.cursor {
+            // Update the cursor icon
+            let new_cursor = match output.platform_output.cursor_icon {
+                egui::CursorIcon::Crosshair => SystemCursor::Crosshair,
+                egui::CursorIcon::Default => SystemCursor::Arrow,
+                egui::CursorIcon::Grab => SystemCursor::Hand,
+                egui::CursorIcon::Grabbing => SystemCursor::SizeAll,
+                egui::CursorIcon::Move => SystemCursor::SizeAll,
+                egui::CursorIcon::PointingHand => SystemCursor::Hand,
+                egui::CursorIcon::ResizeHorizontal => SystemCursor::SizeWE,
+                egui::CursorIcon::ResizeNeSw => SystemCursor::SizeNESW,
+                egui::CursorIcon::ResizeNwSe => SystemCursor::SizeNWSE,
+                egui::CursorIcon::ResizeVertical => SystemCursor::SizeNS,
+                egui::CursorIcon::Text => SystemCursor::IBeam,
+                egui::CursorIcon::NotAllowed | egui::CursorIcon::NoDrop => SystemCursor::No,
+                egui::CursorIcon::Wait => SystemCursor::Wait,
+                _ => SystemCursor::Arrow,
+            };
 
-        if self.system_cursor != new_cursor {
-            self.system_cursor = new_cursor;
-            self.cursor = Cursor::from_system(new_cursor)
-                .map_err(|e| anyhow::anyhow!("Failed to get cursor from systems cursor: {}", e))?;
-            self.cursor.set();
+            if self.system_cursor != new_cursor {
+                self.system_cursor = new_cursor;
+                *cursor = Cursor::from_system(new_cursor).map_err(|e| {
+                    anyhow::anyhow!("Failed to get cursor from systems cursor: {}", e)
+                })?;
+                cursor.set();
+            }
         }
 
         Ok(output)

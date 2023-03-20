@@ -1,6 +1,6 @@
 [package]
 name = "egui_sdl2_platform"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 license = "MIT"
 description = "A render-backend independant egui backend for sdl2"
@@ -13,6 +13,7 @@ members = ["examples/*"]
 sdl2 = { git = "https://github.com/Rust-SDL2/rust-sdl2", revion = "31e830e", features = ["raw-window-handle"] }
 egui = "0.21"
 anyhow = "1.0"
+log = "*"
 
 [features]
 sdl2_unsafe_textures = ["sdl2/unsafe_textures"]
