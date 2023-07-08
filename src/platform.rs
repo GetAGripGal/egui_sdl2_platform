@@ -231,6 +231,11 @@ impl Platform {
         }
     }
 
+    /// Sets points per pixel in egui. Useful for HiDPI screens.
+    pub fn set_pixels_per_point(&mut self, pixels_per_point: Option<f32>) {
+        self.raw_input.pixels_per_point = pixels_per_point;
+    }
+
     /// Update the time
     pub fn update_time(&mut self, duration: f64) {
         self.raw_input.time = Some(duration);
