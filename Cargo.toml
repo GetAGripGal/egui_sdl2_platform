@@ -11,7 +11,7 @@ members = ["examples/*"]
 [dependencies]
 # Temporary commit ref to get SDL2 with correct raw_window_handle for use with wgpu
 sdl2 = { git = "https://github.com/Rust-SDL2/rust-sdl2", revion = "31e830e", features = ["raw-window-handle"] }
-egui = "0.21"
+egui = "0.22"
 anyhow = "1.0"
 log = "*"
 
