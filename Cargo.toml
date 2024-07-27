@@ -13,7 +13,7 @@ members = ["examples/*"]
 sdl2 = { version = "0.37.0", features = ["raw-window-handle"] }
 egui = "0.27"
 anyhow = "1.0"
-log = "*"
+log = "0.4"
 
 [features]
 sdl2_unsafe_textures = ["sdl2/unsafe_textures"]

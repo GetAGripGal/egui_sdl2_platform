@@ -7,7 +7,7 @@ edition = "2021"
 # Include egui_sdl2_platform
 egui_sdl2_platform = { path = "../../", features = ["sdl2_use-pkgconfig"] }
 
-gl = "*"
+gl = "0.14"
 egui = "0.27"
 egui_glow = "0.27"
 
