@@ -118,11 +118,11 @@ impl Platform {
                 let right_ctrl = sdl.keyboard().mod_state() & Mod::RCTRLMOD == Mod::RCTRLMOD;
 
                 // Push the egui event
-                self.raw_input.events.push(if left_ctrl || right_ctrl {
-                    egui::Event::Zoom((delta.y / 125.0).exp())
-                } else {
-                    egui::Event::Scroll(delta)
-                });
+                if left_ctrl || right_ctrl {
+                    self.raw_input
+                        .events
+                        .push(egui::Event::Zoom((delta.y / 125.0).exp()));
+                }
                 self.egui_ctx.wants_pointer_input();
             }
 
@@ -173,6 +173,7 @@ impl Platform {
                         // Push the event
                         self.raw_input.events.push(egui::Event::Key {
                             key,
+                            physical_key: Some(key),
                             pressed: true,
                             repeat: false,
                             modifiers: self.modifiers,
@@ -213,6 +214,7 @@ impl Platform {
                         // Push the event
                         self.raw_input.events.push(egui::Event::Key {
                             key,
+                            physical_key: Some(key),
                             pressed: false,
                             repeat: false,
                             modifiers: self.modifiers,
@@ -229,6 +231,11 @@ impl Platform {
 
             _ => {}
         }
+    }
+
+    /// Set the pixels per point
+    pub fn set_pixels_per_point(&mut self, pixels_per_point: f32) {
+        self.context().set_pixels_per_point(pixels_per_point);
     }
 
     /// Update the time
@@ -295,6 +302,7 @@ impl Platform {
 
     /// Tessellate the egui frame
     pub fn tessellate(&self, full_output: &egui::FullOutput) -> Vec<egui::ClippedPrimitive> {
-        self.egui_ctx.tessellate(full_output.shapes.clone())
+        self.egui_ctx
+            .tessellate(full_output.shapes.clone(), self.egui_ctx.pixels_per_point())
     }
 }

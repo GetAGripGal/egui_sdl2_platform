@@ -7,8 +7,8 @@ edition = "2021"
 # Include egui_sdl2_platform
 egui_sdl2_platform = { path = "../../" }
 
-wgpu = "0.15"
-egui = "0.21"
-egui_wgpu_backend = "0.22"
+wgpu = "0.20"
+egui = "0.27"
+egui_wgpu_backend = "0.29"
 pollster = "0.2"
 anyhow = "1.0"

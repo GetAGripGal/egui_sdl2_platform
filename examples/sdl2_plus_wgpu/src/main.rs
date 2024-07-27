@@ -14,7 +14,7 @@ async fn run() -> anyhow::Result<()> {
         .map_err(|e| anyhow::anyhow!("Failed to initialize sdl video subsystem: {}", e))?;
     // Create the sdl window
     let window = video
-        .window("With love <3 - ComLarsic", 1280, 720)
+        .window("With love <3 - GetAGripGal", 1280, 720)
         .position_centered()
         .resizable()
         .build()?;
@@ -26,7 +26,9 @@ async fn run() -> anyhow::Result<()> {
     // Create the wgpu instance
     let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::default());
     // Create the wgpu surface
-    let surface = unsafe { instance.create_surface(&window)? };
+    let surface = unsafe {
+        instance.create_surface_unsafe(wgpu::SurfaceTargetUnsafe::from_window(&window)?)?
+    };
 
     // Request the adapter
     let adapter = instance
@@ -38,13 +40,8 @@ async fn run() -> anyhow::Result<()> {
     let (device, queue) = adapter
         .request_device(
             &wgpu::DeviceDescriptor {
-                features: wgpu::Features::default(),
-                limits: if cfg!(target_arch = "wasm32") {
-                    wgpu::Limits::downlevel_webgl2_defaults()
-                } else {
-                    wgpu::Limits::default()
-                },
                 label: None,
+                ..Default::default()
             },
             None,
         )
@@ -61,6 +58,7 @@ async fn run() -> anyhow::Result<()> {
         width: window.size().0,
         height: window.size().1,
         present_mode: wgpu::PresentMode::AutoVsync,
+        desired_maximum_frame_latency: 1,
     };
     surface.configure(&device, &surface_config);
 
@@ -125,11 +123,12 @@ async fn run() -> anyhow::Result<()> {
                             b: color[2] as f64,
                             a: color[3] as f64,
                         }),
-                        store: true,
+                        store: wgpu::StoreOp::Store,
                     },
                 })],
                 depth_stencil_attachment: None,
                 label: None,
+                ..Default::default()
             });
         }
 
