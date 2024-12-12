@@ -38,7 +38,7 @@ async fn run() -> anyhow::Result<()> {
             video.gl_get_proc_address(name) as *const _
         })
     };
-    let mut painter = egui_glow::Painter::new(Arc::new(gl), "", None).unwrap();
+    let mut painter = egui_glow::Painter::new(Arc::new(gl), "", None, true).unwrap();
 
     // Create the egui + sdl2 platform
     let mut platform = egui_sdl2_platform::Platform::new(window.size())?;

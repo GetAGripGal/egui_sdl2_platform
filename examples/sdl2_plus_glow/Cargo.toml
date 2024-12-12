@@ -8,8 +8,8 @@ edition = "2021"
 egui_sdl2_platform = { path = "../../", features = ["sdl2_use-pkgconfig"] }
 
 gl = "0.14"
-egui = "0.27"
-egui_glow = "0.27"
+egui = "0.29"
+egui_glow = "0.29"
 
 pollster = "0.2"
 anyhow = "1.0"

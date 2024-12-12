@@ -246,7 +246,7 @@ impl Platform {
     /// Return the processed context
     pub fn context(&mut self) -> egui::Context {
         // Begin the frame
-        self.egui_ctx.begin_frame(self.raw_input.take());
+        self.egui_ctx.begin_pass(self.raw_input.take());
         // Return the ctx
         self.egui_ctx.clone()
     }
@@ -257,7 +257,7 @@ impl Platform {
         video: &mut sdl2::VideoSubsystem,
     ) -> anyhow::Result<egui::FullOutput> {
         // Get the egui output
-        let output = self.egui_ctx.end_frame();
+        let output = self.egui_ctx.end_pass();
         // Update the clipboard
         if !output.platform_output.copied_text.is_empty() {
             // Get the copied text
