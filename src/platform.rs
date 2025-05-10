@@ -259,14 +259,18 @@ impl Platform {
         // Get the egui output
         let output = self.egui_ctx.end_pass();
         // Update the clipboard
-        if !output.platform_output.copied_text.is_empty() {
-            // Get the copied text
-            let text = output.platform_output.copied_text.clone();
-            // Update the clipboard
-            video
-                .clipboard()
-                .set_clipboard_text(&text)
-                .map_err(|e| anyhow::anyhow!("Failed to assign text to clipboard: {}", e))?;
+        for cmd in &output.platform_output.commands {
+            match cmd {
+                egui::OutputCommand::CopyText(text) => {
+                    video
+                        .clipboard()
+                        .set_clipboard_text(&text)
+                        .map_err(|e| anyhow::anyhow!("Failed to assign text to clipboard: {}", e))?;
+                }
+                egui::OutputCommand::CopyImage(_) | egui::OutputCommand::OpenUrl(_) => {
+                    // TODO: Handle CopyImage and OpenUrl commands
+                }
+            }
         }
 
         if let Some(cursor) = &mut self.cursor {
