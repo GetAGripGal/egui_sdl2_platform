@@ -9,7 +9,7 @@ egui_sdl2_platform = { path = "../../", features = ["sdl2_use-pkgconfig"] }
 
 gl = "0.14"
 egui = "0.31"
-egui_glow = "0.29"
+egui_glow = "0.31"
 
 pollster = "0.2"
 anyhow = "1.0"
