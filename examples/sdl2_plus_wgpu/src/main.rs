@@ -24,7 +24,7 @@ async fn run() -> anyhow::Result<()> {
         .map_err(|e| anyhow::anyhow!("Failed to get sdl event pump: {}", e))?;
 
     // Create the wgpu instance
-    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::default());
+    let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor::default());
     // Create the wgpu surface
     let surface = unsafe {
         instance.create_surface_unsafe(wgpu::SurfaceTargetUnsafe::from_window(&window)?)?

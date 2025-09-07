@@ -11,7 +11,7 @@ members = ["examples/*"]
 [dependencies]
 # Temporary commit ref to get SDL2 with correct raw_window_handle for use with wgpu
 sdl2 = { version = "0.37.0", features = ["raw-window-handle"] }
-egui = "0.27"
+egui = "0.31"
 anyhow = "1.0"
 log = "0.4"
 
