@@ -1,6 +1,6 @@
 [package]
 name = "egui_sdl2_platform"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 license = "MIT"
 description = "A render-backend independant egui backend for sdl2"
@@ -10,8 +10,8 @@ members = ["examples/*"]
 
 [dependencies]
 # Temporary commit ref to get SDL2 with correct raw_window_handle for use with wgpu
-sdl2 = { version = "0.37.0", features = ["raw-window-handle"] }
-egui = "0.31"
+sdl2 = { version = "0.38.0", features = ["raw-window-handle"] }
+egui = "0.32"
 anyhow = "1.0"
 log = "0.4"
 

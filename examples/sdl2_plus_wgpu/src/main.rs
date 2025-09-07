@@ -33,18 +33,15 @@ async fn run() -> anyhow::Result<()> {
     // Request the adapter
     let adapter = instance
         .request_adapter(&wgpu::RequestAdapterOptions::default())
-        .await
-        .ok_or(anyhow::anyhow!("Failed to request the adapter."))?;
+        .await?;
+    //.ok_or(anyhow::anyhow!("Failed to request the adapter."))?;
 
     // Request the device and queue
     let (device, queue) = adapter
-        .request_device(
-            &wgpu::DeviceDescriptor {
-                label: None,
-                ..Default::default()
-            },
-            None,
-        )
+        .request_device(&wgpu::DeviceDescriptor {
+            label: None,
+            ..Default::default()
+        })
         .await?;
 
     // Get surface format
@@ -125,6 +122,7 @@ async fn run() -> anyhow::Result<()> {
                         }),
                         store: wgpu::StoreOp::Store,
                     },
+                    depth_slice: None,
                 })],
                 depth_stencil_attachment: None,
                 label: None,
